@@ -27,20 +27,40 @@ Partner-Plugins lseg und sp-global.
 
 ## Installation vom Handy
 
-In der Claude-App (Cowork): **Einstellungen → Plugins → Plugin hinzufügen**,
-dann diese Repo-URL einfügen:
+Der Menüpunkt steckt **nicht** in den Einstellungen, sondern in Cowork:
+
+1. Claude-App öffnen → in der **Seitenleiste „Cowork"** antippen
+   (auf dem Handy läuft Cowork im Beta-Modus)
+2. **„Customize"** (Anpassen) → Reiter **„Plugins"**
+3. Unter **„Personal plugins"** auf **„+"** → **„Add marketplace"**
+4. **„Financial Services"** auswählen — diese Sammlung ist bei Anthropic
+   bereits eingebaut, dafür braucht es kein GitHub
+
+### Oder: diese eigene Kopie verwenden
+
+Gleicher Weg, nur Schritt 3 anders — **„+" → „Add marketplace from GitHub"**,
+dann diese URL einfügen:
 
 ```
 https://github.com/Dominichoch1811-a11y/https-github.com-anthropics-financial-services
 ```
 
-Danach aus der Marketplace-Liste auswählen, was du brauchst. **Nimm
-`financial-analysis` zuerst** — dort liegen die gemeinsamen Modellier-Skills und
-alle Datenanbindungen, die anderen Plugins bauen darauf auf.
+Der Unterschied zur eingebauten Sammlung: hier sind die MCP-Connectors
+abgeschaltet (siehe unten), und die Anleitung ist auf Deutsch.
+
+### Womit anfangen
+
+**`financial-analysis` zuerst** — dort liegen die gemeinsamen
+Modellier-Skills, die anderen Plugins bauen darauf auf.
 
 Für deinen Anwendungsfall (Einzelaktien, Swing-Trading) ist danach
 **`equity-research`** das passendste: Earnings-Analyse, Morning Note,
 Katalysator-Kalender, Thesis-Tracker, Initiating Coverage.
+
+> Hinweis: Plugins mit **lokalen** MCP-Servern laufen nur in der
+> Desktop-App. Das betrifft dich hier nicht — in dieser Kopie sind alle
+> Connectors ohnehin abgeschaltet, und die des Originals sind allesamt
+> Remote-Server über HTTP.
 
 ### Am Rechner (Claude Code)
 
