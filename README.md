@@ -2,10 +2,14 @@
 
 > **Fork-Hinweis / Fork notice** — Kopie von [anthropics/financial-services](https://github.com/anthropics/financial-services)
 > (Apache-2.0). Deutsche Anleitung: **[ANLEITUNG.md](./ANLEITUNG.md)**.
-> Einzige inhaltliche Abweichung: `plugins/vertical-plugins/financial-analysis/.mcp.json`
-> war upstream syntaktisch ungültig (fehlendes Komma nach `egnyte`, nicht
-> geschlossener `box`-Block) und lud dadurch keinen einzigen MCP-Server — hier
-> korrigiert, alle 12 Connectors gültig.
+>
+> Abweichungen: **Die MCP-Connectors sind hier deaktiviert** (alle `.mcp.json`
+> auf `{"mcpServers": {}}`) — sie setzen durchweg kostenpflichtige Abos voraus.
+> Die Vollkonfiguration liegt als `.mcp.json.beispiel` bereit, inklusive der
+> Korrektur eines Syntaxfehlers im Original (fehlendes Komma nach `egnyte`,
+> nicht geschlossener `box`-Block — die Datei war ungültiges JSON und lud
+> dadurch keinen einzigen Server). Agenten, Skills und Kommandos sind
+> unverändert.
 
 Reference agents, skills, and data connectors for the financial-services workflows we see most — investment banking, equity research, private equity, and wealth management.
 

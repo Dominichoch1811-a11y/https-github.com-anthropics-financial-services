@@ -14,7 +14,7 @@ sondern Plugins für Claude selbst: Markdown und JSON, kein Build-Schritt.
 |---|---|---|
 | **Agenten** (fertige End-to-End-Workflows) | 10 | `plugins/agent-plugins/` |
 | **Vertikale Plugins** (Skills + Slash-Kommandos) | 7 + 2 Partner | `plugins/vertical-plugins/`, `plugins/partner-built/` |
-| **MCP-Datenanbindungen** | 12 | `plugins/vertical-plugins/financial-analysis/.mcp.json` |
+| **MCP-Datenanbindungen** | 0 aktiv (12 als Vorlage) | `plugins/vertical-plugins/financial-analysis/.mcp.json.beispiel` |
 | **Managed-Agent-Vorlagen** (headless über `/v1/agents`) | 10 | `managed-agent-cookbooks/` |
 
 Die 10 Agenten: Pitch Agent, Meeting Prep, Market Researcher, Earnings Reviewer,
@@ -54,46 +54,54 @@ Nach der Installation stehen die Slash-Kommandos in der Session zur Verfügung
 (`/comps`, `/dcf`, `/earnings`, `/morning-note`, `/catalysts`, …), und die Skills
 greifen automatisch, wenn sie zum Thema passen.
 
-## MCP-Datenanbindungen — was das wirklich kostet
+## MCP-Datenanbindungen sind bewusst abgeschaltet
 
-Das ist der Punkt, an dem man ehrlich sein muss: **alle 12 Anbindungen sind
-kostenpflichtige Profi-Datendienste.** Die URLs stehen in der Konfiguration,
-aber ohne Abo oder API-Key des jeweiligen Anbieters bekommst du keine Daten.
+Im Original bringt das Kern-Plugin zwölf Datenanbindungen mit. **Alle zwölf sind
+kostenpflichtige Profi-Datendienste** (Daloopa, Morningstar, S&P Global,
+FactSet, Moody's, MT Newswires, Aiera, LSEG, PitchBook, Chronograph, Egnyte,
+Box). Ohne Abo des jeweiligen Anbieters liefern sie keine Daten.
 
-| Anbieter | Wofür | Zugang |
-|---|---|---|
-| Daloopa | Fundamentaldaten aus Filings | Abo |
-| Morningstar | Fonds-, Aktien-Research | Abo |
-| S&P Global (Kensho) | Capital IQ | Abo |
-| FactSet | Terminal-Daten | Abo |
-| Moody's | Kreditdaten | Abo |
-| MT Newswires | Nachrichten | Abo |
-| Aiera | Earnings-Call-Transkripte | Abo |
-| LSEG | Anleihen, Swaps, FX, Vola | Abo |
-| PitchBook | Private Markets | Abo |
-| Chronograph | PE-Portfolio-Monitoring | Abo |
-| Egnyte | Dokumentenablage | Abo/eigener Account |
-| Box | Dokumentenablage | Abo/eigener Account |
+In dieser Kopie sind sie deshalb **deaktiviert** — alle `.mcp.json` stehen auf
+`{"mcpServers": {}}`. Beim Installieren fragt dich damit nichts nach Zugängen,
+und es läuft nichts ins Leere.
 
-**Praktische Konsequenz:** Die Skills und Agenten funktionieren auch ohne diese
-Anbindungen — sie arbeiten dann mit dem, was du selbst hineingibst (hochgeladene
-Geschäftsberichte, Excel-Dateien, Zahlen aus dem Chat) und mit Websuche. Was
-fehlt, ist der automatische Datenabruf. Für Privatanleger ist das der
-Normalfall; die Anbindungen zielen auf Banken und Fonds mit bestehenden
-Terminal-Verträgen.
+**Das kostet dich keine Funktion, die du hättest nutzen können.** Die Skills und
+Agenten arbeiten ohnehin mit dem, was du hineingibst: hochgeladene
+Geschäftsberichte und Excel-Dateien, Zahlen aus dem Chat, Websuche. Was fehlt,
+ist allein der automatische Abruf aus einem Terminal — und den hättest du ohne
+Vertrag sowieso nicht gehabt. Die Anbindungen zielen auf Banken und Fonds.
 
-Dein `hebel-bot` löst dasselbe Problem anders: yfinance für Kurse und
-Google-News-RSS für Schlagzeilen — kostenlos, dafür weniger tief.
+Zwei Plugins sind ohne ihre Datenquelle allerdings **sinnlos**: `lseg` und
+`spglobal` (Partner-Plugins) bestehen praktisch nur aus Workflows auf genau
+diesen Feeds. Sie liegen weiter im Repo, aber installier sie nicht — sie
+brächten dir nichts.
 
-## Abweichung vom Original
+Dein `hebel-bot` löst dasselbe Problem kostenlos: yfinance für Kurse,
+Google-News-RSS für Schlagzeilen. Weniger tief, aber ohne Vertrag.
 
-`plugins/vertical-plugins/financial-analysis/.mcp.json` war im Original
-**syntaktisch kaputt**: nach dem `egnyte`-Block fehlte ein Komma, und der
-`box`-Block war nicht korrekt geschlossen. Ein JSON-Parser bricht darauf ab —
-das Plugin hätte **keine einzige** Datenanbindung geladen, und Box fehlte
-zusätzlich ganz. In dieser Kopie ist das korrigiert, alle 12 Server sind
-gültig konfiguriert. Geprüft mit `python3 scripts/check.py` (83 Dateien, 0
-Probleme).
+### Später doch aktivieren
+
+Die reparierte Vollkonfiguration liegt als Vorlage bereit:
+`plugins/vertical-plugins/financial-analysis/.mcp.json.beispiel`. Falls du
+irgendwann einen Zugang hast, kopierst du den gewünschten Eintrag daraus in
+`.mcp.json` (den Schlüssel `_hinweis` weglassen) — einzelne Anbieter gehen
+auch, es müssen nicht alle sein.
+
+## Abweichungen vom Original
+
+1. **MCP-Anbindungen deaktiviert** (siehe oben) — die reparierte Vollversion
+   liegt als `.mcp.json.beispiel` daneben.
+2. **Syntaxfehler korrigiert:** `financial-analysis/.mcp.json` war im Original
+   ungültiges JSON — nach dem `egnyte`-Block fehlte ein Komma, und der
+   `box`-Block war nicht geschlossen. Ein Parser bricht darauf ab, das Plugin
+   hätte also *keine einzige* Anbindung geladen, und Box fehlte zusätzlich
+   ganz. Die Korrektur steckt in der Beispiel-Vorlage, damit sie beim
+   Aktivieren nicht wieder verloren geht.
+3. **ANLEITUNG.md** (diese Datei) und ein Fork-Hinweis oben in der README.
+
+Sonst ist nichts verändert: Agenten, Skills, Kommandos und
+Managed-Agent-Vorlagen sind Wort für Wort das Original. Geprüft mit
+`python3 scripts/check.py` (83 Dateien, 0 Probleme).
 
 ## Verbindung zum hebel-bot
 
